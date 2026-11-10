@@ -53,9 +53,24 @@ client.on('message', async (message) => {
     if (message.isGroupMsg) return;
 
     // tambahan untuk prefix message
-    const prefix = '!ai ';
+    // const prefix = '!ai ';
 
     if (!message.body.startsWith(prefix)) return;
+
+    const chat = await message.getChat();
+
+    if (chat.isGroup) {
+        // Ambil info perangkat bot Anda sendiri
+        const botId = client.info.wid._serialized;
+        
+        // Periksa apakah bot di-tag di dalam pesan tersebut
+        const isMentioned = message.mentionedIds.includes(botId);
+
+        if (!isMentioned) {
+            return; // Abaikan jika tidak di-tag
+        }
+    }
+
     // Optional: trigger only if message starts with a specific prefix like "!ai" or reply to all
     const promptText = message.body;
 
